@@ -2,6 +2,8 @@
 
 # Copyright (c) 2021 Nordic Semiconductor ASA
 # Copyright (c) 2021 Yonatan Schachter
+# Copyright (c) 2022 Ruth Ivimey-Cook
+#
 # SPDX-License-Identifier: Apache-2.0
 
 choice
@@ -13,16 +15,47 @@ config SOC_RP2040
 
 endchoice
 
-# Flash type used by the SoC. The board should select the one used.
+# These options are unlikely to be useful for any other SOC, because
+# they relate to SOC-specific assembler files.
+choice RP2_BOOT_FLASH_DEVICE
+	prompt "RP2xxx Boot Device Selection"
+	depends on SOC_RP2040
 
 config RP2_FLASH_W25Q080
-	bool
-
-config RP2_FLASH_GENERIC_03H
-	bool
+	bool "Winbond W25Q080 (& compatible) Flash over QSPI"
+	help
+		Enables QSPI boot code that understands the Winbond W25Q080 and
+		W25Q16JV, Adesto AT25SF081, and Cypress S25FL132K0 Flash devices.
+		Should be defined in the board definition.
 
 config RP2_FLASH_IS25LP080
-	bool
+	bool "ISSI IS25LP080 Flash over QSPI"
+	help
+		Enables QSPI boot code that understands ISSI IS25LP080D Flash
+		devices. Code is a variant of the W25Q080 boot code.
+		Should be defined in the board definition.
 
 config RP2_FLASH_W25X10CL
-	bool
+	bool "Winbond W25X10CL Flash over QSPI"
+	help
+		Enables QSPI boot code that understands the Winbond W25X10CL
+		Flash device.
+		Should be defined in the board definition.
+
+config RP2_FLASH_AT25SF128A
+	bool "Adesto AT25SF128A Flash over QSPI"
+	help
+		Enables QSPI boot code that understands the Adesto AT25SF128A
+		Flash device. Code is a variant of the W25Q080 boot code.
+		Should be defined in the board definition.
+
+config RP2_FLASH_GENERIC_03H
+	bool "Boot from generic SPI Flash"
+	help
+		Enables SPI boot code that understands any Flash device that
+		responds to an SPI Serial Read (03h) command. This will be
+		about 3x slower than when using QSPI.
+		Should be defined in the board definition.
+
+endchoice
+

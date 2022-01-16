@@ -9,6 +9,11 @@
 #include <mem.h>
 
 / {
+    /*
+     * Dual CPUs implementing the ARMv6-M architecture profile. See the
+     * ARMv6-M Architecture Reference Manual. A multistage 32bit RISC with
+     * single cycle I/O, hardware debug, and memory protection.
+     */
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -24,18 +29,57 @@
 		};
 	};
 
+	/*
+	 * A 16K boot rom is built into the device, containing USB boot
+	 * code and various reset and utility functions.
+	 */
+	rom0: memory@00000000 {
+		compatible = "mmio-rom";
+		reg = <0x00000000 DT_SIZE_K(16)>;
+	};
+
+	/*
+	 * 264K of SRAM is available as four 64K (16*32) blocks, word-interleaved
+	 * and also two 4K (1Kx32) other banks that can be repurposed. Up to four
+	 * 32bit SRAM accesses can takep place per sclk cycle.
+	 * The two 4K regions are at 0x20040000 and 0x20041000.
+     * There are also non-striped versions of the 64K blocks at 16MB offsets
+     * from the base (0x21000000, 0x21010000, 0x21020000, 0x21030000).
+	 */
 	sram0: memory@20000000 {
 		compatible = "mmio-sram";
 		reg = <0x20000000 DT_SIZE_K(264)>;
 	};
 
-	/* Flash starts at 0x10000000 but the first 0x100 bytes
-	 * are reserved for the second stage bootloader
+	/*
+	 * Flash XIP caching memory is available if the execute-in-place function
+	 * is not enabled (via QSPI access to flash).  See also notes on &flash0.
+	 * Bus error if XIP is not disabled in the XIP: CTRL Register.
+	 */
+	xipmem: memory@15000000 {
+        compatible = "mmio-sram";
+        reg = <0x15000000 DT_SIZE_K(16)>;
+    };
+
+    /*
+     * USB data DPRAM is available if USB is not in use.
+     */
+	usbmem: memory@50100000 {
+        compatible = "mmio-sram";
+        reg = <0x15000000 DT_SIZE_K(4)>;
+    };
+
+	/*
+	 * XIP Flash starts at 0x10000000 but the first 0x100 bytes are
+	 * reserved for the second stage bootloader. Max supported flash size
+	 * with XIP in use is 16MB (XIP uses 24bit addressing).
+	 *
+	 * Address prefixes 0x10, 0x11, 0x12, 0x13, 0x15 etc enable access to
+	 * flash using different cache behaviour.
 	 */
 	flash0: flash@10000100 {
 		compatible = "soc-nv-flash";
 		label = "FLASH_RP2";
-
 		write-block-size = <1>;
 	};
 
@@ -46,6 +90,34 @@
 	};
 
 	soc {
+		/*
+		 * Word offsets from 0xe010 to 0xeda0.
+		 * An instance for each CPU.
+		 */
+		m0plus: m0plus@e0000000 {
+			compatible = "rpi,pico-m0plus";
+			reg = <0xe0000000 DT_SIZE(0x48)>;
+			label = "SYSINFO";
+			status = "okay";
+		};
+
+		sysinfo: sysinfo@40000000 {
+			compatible = "rpi,pico-sysinfo";
+			reg = <0x40000000 DT_SIZE(0x48)>;
+			label = "SYSINFO";
+			status = "okay";
+		};
+
+		syscfg: syscfg@40004000 {
+			compatible = "rpi,pico-syscfg";
+			reg = <0x40004000 DT_SIZE(0x1f)>;
+			label = "SYSCFG";
+			status = "okay";
+		};
+
+		/**
+		 * Unit controlling multiplexing of pins, gpio or otherwise.
+		 */
 		pinctrl: pin-controller@40014000 {
 			compatible = "rpi,pico-pinctrl";
 			reg = <0x40014000 DT_SIZE_K(4)>;
@@ -55,9 +127,14 @@
 			label = "PINCTRL";
 		};
 
+		/**
+		 * GPIO controller - interrupts, etc.
+		 */
 		gpio0: gpio@40014000 {
 			compatible = "rpi,pico-gpio";
 			reg = <0x40014000 DT_SIZE_K(4)>;
+			/* Note: gpio ints are independently controlled per processor
+			 * Int 13 is "IO_IRQ_BANK0"	*/
 			interrupts = <13 3>;
 			gpio-controller;
 			#gpio-cells = <2>;
@@ -65,50 +142,179 @@
 			status = "disabled";
 		};
 
+		/**
+		 * GPIO controller, pad master enable, drive strength etc.
+		 */
+		pads0: pads@4001c000 {
+            compatible = "rpi,pico-gpio";
+            reg = <0x4001c000 DT_SIZE_K(4)>;
+            label = "GPIO_0";
+            status = "disabled";
+		};
+
+		/**
+		 * Standard UART based on ARM PL012 IP, channel 0.
+		 */
 		uart0: uart@40034000 {
 			compatible = "rpi,pico-uart";
 			reg = <0x40034000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <20 3>;
+			interrupts = <UART0_IRQ 3>;
 			interrupt-names = "uart0";
 			label = "UART_0";
 			status = "disabled";
 		};
 
+		/**
+		 * Standard UART based on ARM PL012 IP, channel 1.
+		 */
 		uart1: uart@40038000 {
 			compatible = "rpi,pico-uart";
 			reg = <0x40038000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <21 3>;
+			interrupts = <UART1_IRQ 3>;
 			interrupt-names = "uart1";
 			label = "UART_1";
 			status = "disabled";
 		};
 
+		/**
+		 * Serial Peripheral Interface (SPI) 3-wire bus controller, chan 0.
+		 */
 		spi0: spi@4003c000 {
 			compatible = "rpi,pico-spi";
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0x4003c000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <22 3>;
+			interrupts = <SPI0_IRQ 3>;
 			interrupt-names = "spi0";
 			label = "SPI_0";
 			status = "disabled";
 		};
 
+		/**
+		 * Serial Peripheral Interface (SPI) 3-wire bus controller, chan 1.
+		 */
 		spi1: spi@40040000 {
 			compatible = "rpi,pico-spi";
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0x40040000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <23 3>;
+			interrupts = <SPI1_IRQ 3>;
 			interrupt-names = "spi1";
 			label = "SPI_1";
 			status = "disabled";
 		};
 
+		/**
+		 * Inter-Integrated circuit (I2C) 2-wire bus controller, chan 0.
+		 */
+		i2c0: i2c@40044000 {
+			compatible = "rpi,pico-i2c";
+			reg = <0x40044000 DT_SIZE_K(4)>;
+			clocks = <&peripheral_clk>;
+			interrupts = <23 3>;
+			interrupt-names = "i2c0";
+			label = "I2C_0";
+			status = "disabled";
+		};
+
+		/**
+		 * Inter-Integrated circuit (I2C) single wire bus controller, chan 1.
+		 */
+		i2c1: i2c@40048000 {
+			compatible = "rpi,pico-i2c";
+			reg = <0x40048000 DT_SIZE_K(4)>;
+			clocks = <&peripheral_clk>;
+			interrupts = <24 3>;
+			interrupt-names = "i2c1";
+			label = "I2C_1";
+			status = "disabled";
+		};
+
+		/**
+		 * Analogue to Digital converter with 5 muxed inputs, 12 bit resolution.
+		 * One mux input is internal temperature sensor.
+		 */
+		adc: adc@4004c000 {
+			compatible = "rpi,pico-adc";
+			reg = <0x4004c000 DT_SIZE_K(4)>;
+			clocks = <&peripheral_clk>;
+			interrupts = <22 3>;
+			interrupt-names = "adc";
+			label = "ADC";
+			status = "disabled";
+            #io-channel-cells = <1>;
+		};
+
+		/**
+		 * Pulse Width Modulation (PWM) on up to 8 channels, 12 bit resolution.
+		 */
+		pwm: pwm@40050000 {
+			compatible = "rpi,pico-pwm";
+			reg = <0x40050000 DT_SIZE_K(4)>;
+			interrupts = <4 3>;
+			interrupt-names = "pwm";
+			label = "PWM";
+			status = "disabled";
+		};
+
+		/**
+		 * Systick 64 bit timer + 4 alarms.
+		 */
+		timer: timer@40054000 {
+			compatible = "rpi,pico-timer";
+			reg = <0x40054000 DT_SIZE_K(4)>;
+			clocks = <&peripheral_clk>;
+			interrupts = <0 3> <1 3>, <2 3>, <3 3>;
+			interrupt-names = "timer0", "timer1", "timer2";
+			label = "TIMER";
+			status = "disabled";
+		};
+
+		/**
+		 * Clock/Timer unit.
+		 */
+		rtc: rtc@4005c000 {
+			compatible = "rpi,pico-rtc";
+			reg = <0x4005c000 DT_SIZE_K(4)>;
+			clock-frequency = <32768>;
+			interrupts = <25 3>;
+			interrupt-names = "rtc";
+			label = "RTC";
+			status = "disabled";
+		};
+
+		/*
+		 * Watchdog unit.
+		 */
+		wdt0: watchdog@40058000 {
+			compatible = "rpi,pico-wdg";
+			reg = <0x40058000 DT_SIZE_K(4)>;
+			label = "RTC";
+			status = "disabled";
+		};
+
+		/*
+		 * DMA controller with 12 independent channels. Each channel can be
+		 * claimed & released dynamically depending on need, and chained
+		 * for scatter/gather uses.
+		 */
+		dma: dma@50000000 {
+			compatible = "rpi,pico-dma";
+			reg = <0x50000000 DT_SIZE_K(4)>;
+			interrupts = <11 3> <12 3>;
+			interrupt-names = "dma0" "dma1";
+			label = "DMA";
+            #dma-cells = <1>;
+			status = "okay";
+		};
+
+		/**
+		 * USB master/slave device incl. up to 16 endpoints.
+		 */
 		usbd: usbd@50100000 {
 			compatible = "rpi,pico-usbd";
 			reg = <0x50100000 0x10000>;
@@ -118,7 +324,45 @@
 			label = "USBD";
 			status = "disabled";
 		};
+
+		/**
+		 * Programmed I/O block 0, incl 4 state machines.
+		 */
+		pio0: pio@50200000 {
+				compatible = "rpi,pico-pio";
+				reg = <0x50200000 DT_SIZE_K(4)>;
+				interrupts = <7 3>, <8 3>;
+				interrupt-names = "pio0_0", "pio0_1";
+				label = "PIO0";
+				status = "disabled";
+		};
+
+		/**
+		 * Programmed I/O block 1, incl 4 state machines.
+		 */
+		pio1: pio@50300000 {
+				compatible = "rpi,pico-pio";
+				reg = <0x50300000 DT_SIZE_K(4)>;
+				interrupts = <9 3>, <10 3>;
+				interrupt-names = "pio1_0", "pio1_1";
+				label = "PIO1";
+				status = "disabled";
+		};
+
+		/**
+		 * Single cycle memory access region.
+		 */
+		sio: sio@d0000000 {
+				compatible = "rpi,pico-sio";
+				reg = <0xd0000000 DT_SIZE_K(4)>;
+				interrupts = <7 3>, <8 3>;
+				interrupt-names = "sio0", "sio1";
+				label = "SIO";
+				status = "disabled";
+		};
+
 	};
+
 };
 
 &nvic {

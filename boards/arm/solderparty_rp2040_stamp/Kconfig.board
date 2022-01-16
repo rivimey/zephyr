@@ -1,0 +1,6 @@
+# Copyright (c) 2022 Ruth Ivimey-Cook
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_SOLDERPARTY_RP2040_STAMP
+	bool "Solderparty RP2040 Stamp Board"
+	depends on SOC_RP2040

@@ -15,4 +15,17 @@
 			input-enable;
 		};
 	};
+
+    spi0_default: spi0_default {
+        group1 {
+            pinmux = <SPI0_TX_P3>;
+        };
+        group2 {
+            pinmux = <SPI0_RX_P4>;
+            input-enable;
+        };
+        group3 {
+            pinmux = <SPI0_SCK_P6>;
+        };
+    };
 };

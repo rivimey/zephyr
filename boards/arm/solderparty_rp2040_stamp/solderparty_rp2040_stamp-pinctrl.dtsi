@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2021, Yonatan Schachter
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
+
+&pinctrl {
+	uart0_default: uart0_default {
+		group1 {
+			pinmux = <UART1_TX_P20>;
+		};
+		group2 {
+			pinmux = <UART1_RX_P5>;
+			input-enable;
+		};
+	};
+
+	uart1_default: uart0_default {
+		group1 {
+			pinmux = <UART1_TX_P20>;
+		};
+		group2 {
+			pinmux = <UART1_RX_P5>;
+			input-enable;
+		};
+	};
+
+	spi0_default: spi0_default {
+		group1 {
+			pinmux = <SPI0_TX_P3>;
+		};
+		group2 {
+			pinmux = <SPI0_RX_P4>;
+			input-enable;
+		};
+		group3 {
+			pinmux = <SPI0_SCK_P6>;
+		};
+	};
+
+	spi1_default: spi0_default {
+		group1 {
+			pinmux = <SPI0_TX_P3>;
+		};
+		group2 {
+			pinmux = <SPI0_RX_P4>;
+			input-enable;
+		};
+		group3 {
+			pinmux = <SPI0_SCK_P6>;
+		};
+	};
+
+	adc0: adc_default {
+		group1 {
+			pinmux = <ANALOG0>;
+		};
+	};
+
+	adc1: adc_default {
+		group1 {
+			pinmux = <ANALOG1>;
+		};
+	};
+
+	adc2: adc_default {
+		group1 {
+			pinmux = <ANALOG2>;
+		};
+	};
+
+	adc3: adc_default {
+		group1 {
+			pinmux = <ANALOG3>;
+		};
+	};
+};

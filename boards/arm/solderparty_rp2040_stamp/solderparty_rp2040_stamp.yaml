@@ -1,0 +1,14 @@
+# Copyright (c) 2022 Ruth Ivimey-Cook
+
+identifier: solderparty_rp2040_stamp
+name: Solderparty-RP2040-Stamp
+type: mcu
+arch: arm
+flash: 8192
+ram: 264
+toolchain:
+  - zephyr
+  - gnuarmemb
+  - xtools
+supported:
+  - serial
