@@ -1,0 +1,194 @@
+/*
+ * Copyright (c) 2021, Yonatan Schachter
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
+
+&pinctrl {
+	&uart0_p0: {
+		group1 { pinmux = <UART0_TX_P0>; pinmux = <UART0_CTS_P2>; }
+		group2 { pinmux = <UART0_RX_P1>; pinmux = <UART0_RTS_P3>; input-enable; }
+	}
+	&uart1_p4: {
+		group1 { pinmux = <UART1_TX_P4>; pinmux = <UART1_CTS_P6>; }
+		group2 { pinmux = <UART1_RX_P5>; pinmux = <UART1_RTS_P7>; input-enable; }
+	}
+	&uart1_p8: {
+		group1 { pinmux = <UART1_TX_P8>; pinmux = <UART1_CTS_P10>; }
+		group2 { pinmux = <UART1_RX_P9>; pinmux = <UART1_RTS_P11>; input-enable; }
+	}
+	&uart0_p12: {
+		group1 { pinmux = <UART0_TX_P12>; pinmux = <UART0_CTS_P14>; }
+		group2 { pinmux = <UART0_RX_P13>; pinmux = <UART0_RTS_P15>; input-enable; }
+	}
+	&uart0_p16: {
+		group1 { pinmux = <UART0_TX_P16>; pinmux = <UART0_CTS_P18>; }
+		group2 { pinmux = <UART0_RX_P17>; pinmux = <UART0_RTS_P19>; input-enable; }
+	}
+	&uart1_p20: {
+		group1 { pinmux = <UART1_TX_P20>; pinmux = <UART1_CTS_P22>; }
+		group2 { pinmux = <UART1_RX_P21>; pinmux = <UART1_RTS_P23>; input-enable; }
+	}
+	&uart1_p24: {
+		group1 { pinmux = <UART1_TX_P24>; pinmux = <UART1_CTS_P26>; }
+		group2 { pinmux = <UART1_RX_P25>; pinmux = <UART1_RTS_P27>; input-enable; }
+	}
+	&spi0_p0: {
+		group1 { pinmux = <SPI0_TX_P3>; }
+		group2 { pinmux = <SPI0_RX_P0>; pinmux = <SPI0_CSN_P1>; pinmux = <SPI0_SCK_P2>; input-enable; }
+	}
+	&spi0_p4: {
+		group1 { pinmux = <SPI0_TX_P7>; }
+		group2 { pinmux = <SPI0_RX_P4>; pinmux = <SPI0_CSN_P5>; pinmux = <SPI0_SCK_P6>; input-enable; }
+	}
+	&spi1_p8: {
+		group1 { pinmux = <SPI1_TX_P11>; }
+		group2 { pinmux = <SPI1_RX_P8>; pinmux = <SPI1_CSN_P9>; pinmux = <SPI1_SCK_P10>; input-enable; }
+	}
+	&spi1_p12: {
+		group1 { pinmux = <SPI1_TX_P15>; }
+		group2 { pinmux = <SPI1_RX_P12>; pinmux = <SPI1_CSN_P13>; pinmux = <SPI1_SCK_P14>; input-enable; }
+	}
+	&spi0_p16: {
+		group1 { pinmux = <SPI0_TX_P19>; }
+		group2 { pinmux = <SPI0_RX_P16>; pinmux = <SPI0_CSN_P17>; pinmux = <SPI0_SCK_P18>; input-enable; }
+	}
+	&spi0_p20: {
+		group1 { pinmux = <SPI0_TX_P23>; }
+		group2 { pinmux = <SPI0_RX_P20>; pinmux = <SPI0_CSN_P21>; pinmux = <SPI0_SCK_P22>; input-enable; }
+	}
+	&spi1_p24: {
+		group1 { pinmux = <SPI1_TX_P27>; }
+		group2 { pinmux = <SPI1_RX_P24>; pinmux = <SPI1_CSN_P25>; pinmux = <SPI1_SCK_P26>; input-enable; }
+	}
+	&i2c0_p0: {
+		group1 { pinmux = <I2C0_SDA_P0>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P1>; input-enable; }
+	}
+	&i2c1_p2: {
+		group1 { pinmux = <I2C1_SDA_P2>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P3>; input-enable; }
+	}
+	&i2c0_p4: {
+		group1 { pinmux = <I2C0_SDA_P4>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P5>; input-enable; }
+	}
+	&i2c1_p6: {
+		group1 { pinmux = <I2C1_SDA_P6>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P7>; input-enable; }
+	}
+	&i2c0_p8: {
+		group1 { pinmux = <I2C0_SDA_P8>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P9>; input-enable; }
+	}
+	&i2c1_p10: {
+		group1 { pinmux = <I2C1_SDA_P10>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P11>; input-enable; }
+	}
+	&i2c0_p12: {
+		group1 { pinmux = <I2C0_SDA_P12>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P13>; input-enable; }
+	}
+	&i2c1_p14: {
+		group1 { pinmux = <I2C1_SDA_P14>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P15>; input-enable; }
+	}
+	&i2c0_p16: {
+		group1 { pinmux = <I2C0_SDA_P16>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P17>; input-enable; }
+	}
+	&i2c1_p18: {
+		group1 { pinmux = <I2C1_SDA_P18>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P19>; input-enable; }
+	}
+	&i2c0_p20: {
+		group1 { pinmux = <I2C0_SDA_P20>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P21>; input-enable; }
+	}
+	&i2c1_p22: {
+		group1 { pinmux = <I2C1_SDA_P22>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P23>; input-enable; }
+	}
+	&i2c0_p24: {
+		group1 { pinmux = <I2C0_SDA_P24>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P25>; input-enable; }
+	}
+	&i2c1_p26: {
+		group1 { pinmux = <I2C1_SDA_P26>; input-enable; }
+		group2 { pinmux = <I2C1_SCL_P27>; input-enable; }
+	}
+	&i2c0_p28: {
+		group1 { pinmux = <I2C0_SDA_P28>; input-enable; }
+		group2 { pinmux = <I2C0_SCL_P29>; input-enable; }
+	}
+	&sio_p0: { pinmux = <SIO_P0>; }
+	&sio_p1: { pinmux = <SIO_P1>; }
+	&sio_p2: { pinmux = <SIO_P2>; }
+	&sio_p3: { pinmux = <SIO_P3>; }
+	&sio_p4: { pinmux = <SIO_P4>; }
+	&sio_p5: { pinmux = <SIO_P5>; }
+	&sio_p6: { pinmux = <SIO_P6>; }
+	&sio_p7: { pinmux = <SIO_P7>; }
+	&sio_p8: { pinmux = <SIO_P8>; }
+	&sio_p9: { pinmux = <SIO_P9>; }
+	&sio_p10: { pinmux = <SIO_P10>; }
+	&sio_p11: { pinmux = <SIO_P11>; }
+	&sio_p12: { pinmux = <SIO_P12>; }
+	&sio_p13: { pinmux = <SIO_P13>; }
+	&sio_p14: { pinmux = <SIO_P14>; }
+	&sio_p15: { pinmux = <SIO_P15>; }
+	&sio_p16: { pinmux = <SIO_P16>; }
+	&sio_p17: { pinmux = <SIO_P17>; }
+	&sio_p18: { pinmux = <SIO_P18>; }
+	&sio_p19: { pinmux = <SIO_P19>; }
+	&sio_p20: { pinmux = <SIO_P20>; }
+	&sio_p21: { pinmux = <SIO_P21>; }
+	&sio_p22: { pinmux = <SIO_P22>; }
+	&sio_p23: { pinmux = <SIO_P23>; }
+	&sio_p24: { pinmux = <SIO_P24>; }
+	&sio_p25: { pinmux = <SIO_P25>; }
+	&sio_p26: { pinmux = <SIO_P26>; }
+	&sio_p27: { pinmux = <SIO_P27>; }
+	&sio_p28: { pinmux = <SIO_P28>; }
+	&sio_p29: { pinmux = <SIO_P29>; }
+	&pwm0a_p0: { pinmux = <PWM0_A_P0>; }
+	&pwm0b_p1: { pinmux = <PWM0_B_P1>; }
+	&pwm1a_p2: { pinmux = <PWM1_A_P2>; }
+	&pwm1b_p3: { pinmux = <PWM1_B_P3>; }
+	&pwm2a_p4: { pinmux = <PWM2_A_P4>; }
+	&pwm2b_p5: { pinmux = <PWM2_B_P5>; }
+	&pwm3a_p6: { pinmux = <PWM3_A_P6>; }
+	&pwm3b_p7: { pinmux = <PWM3_B_P7>; }
+	&pwm4a_p8: { pinmux = <PWM4_A_P8>; }
+	&pwm4b_p9: { pinmux = <PWM4_B_P9>; }
+	&pwm5a_p10: { pinmux = <PWM5_A_P10>; }
+	&pwm5b_p11: { pinmux = <PWM5_B_P11>; }
+	&pwm6a_p12: { pinmux = <PWM6_A_P12>; }
+	&pwm6b_p13: { pinmux = <PWM6_B_P13>; }
+	&pwm7a_p14: { pinmux = <PWM7_A_P14>; }
+	&pwm7b_p15: { pinmux = <PWM7_B_P15>; }
+	&pwm0a_p16: { pinmux = <PWM0_A_P16>; }
+	&pwm0b_p17: { pinmux = <PWM0_B_P17>; }
+	&pwm1a_p18: { pinmux = <PWM1_A_P18>; }
+	&pwm1b_p19: { pinmux = <PWM1_B_P19>; }
+	&pwm2a_p20: { pinmux = <PWM2_A_P20>; }
+	&pwm2b_p21: { pinmux = <PWM2_B_P21>; }
+	&pwm3a_p22: { pinmux = <PWM3_A_P22>; }
+	&pwm3b_p23: { pinmux = <PWM3_B_P23>; }
+	&pwm4a_p24: { pinmux = <PWM4_A_P24>; }
+	&pwm4b_p25: { pinmux = <PWM4_B_P25>; }
+	&pwm5a_p26: { pinmux = <PWM5_A_P26>; }
+	&pwm5b_p27: { pinmux = <PWM5_B_P27>; }
+	&pwm6a_p28: { pinmux = <PWM6_A_P28>; }
+	&pwm6b_p29: { pinmux = <PWM6_B_P29>; }
+
+	/* ordered by pin numbers used */
+	&uart0_default: uart0_p0 { };
+	&uart1_default: uart1_p4 { };
+	&spi1_default: spi1_p8 { };
+	&i2c0_default: i2c0_p12 { };
+	&i2c1_default: i2c1_p14 { };
+	&spi0_default: spi0_p16 { };
+
+};

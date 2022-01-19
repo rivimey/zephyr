@@ -20,6 +20,8 @@ if(CONFIG_HAS_RPI_PICO)
 				${boot_stage_dir}/boot2_is25lp080.S)
 	target_sources_ifdef(CONFIG_RP2_FLASH_W25X10CL boot_stage2 PRIVATE
 				${boot_stage_dir}/boot2_w25x10cl.S)
+	target_sources_ifdef(CONFIG_RP2_FLASH_AT25SF128A boot_stage2 PRIVATE
+				${boot_stage_dir}/boot2_at25Sf128a.S)
 
 	target_include_directories(boot_stage2 PUBLIC
 		${CMAKE_CURRENT_LIST_DIR}

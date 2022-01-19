@@ -25,8 +25,8 @@
 #define PIN_NUM_POS 4
 #define PIN_NUM_MASK 0x1f
 
-#define RP2040_PINMUX(pin_num, alt_func) (pin_num << PIN_NUM_POS |	\
-					alt_func << ALT_FUNC_POS)
+#define RP2040_PINMUX(pin_num, alt_func) ((pin_num & PIN_NUM_MASK) << PIN_NUM_POS |	\
+					(alt_func & ALT_FUNC_MASK) << ALT_FUNC_POS)
 
 // UART options: (up to 4 pins/unit, NB 28/29 has no RTS/CTS option)
 #define UART0_TX_P0 RP2040_PINMUX(0, PINCTRL_GPIO_FUNC_UART)

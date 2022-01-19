@@ -6,6 +6,8 @@
 
 /dts-v1/;
 
+#include <dt-bindings/i2c/i2c.h>
+#include <rpi_pico/rp2040-pinctrl.dtsi>
 #include <rpi_pico/rp2040.dtsi>
 #include "solderparty_rp2040_stamp-pinctrl.dtsi"
 #include <freq.h>
@@ -84,26 +86,26 @@
 };
 
 &i2c0 {
-	pinctrl-0 = <&i2c1_scl_pb8 &i2c1_sda_pb9>;
+	pinctrl-0 = <&i2c0_p8>;
 	pinctrl-names = "default";
 	status = "okay";
 	clock-frequency = <I2C_BITRATE_FAST>;
 };
 
 &i2c1 {
-	pinctrl-0 = <&i2c1_scl_pb10 &i2c1_sda_pb11>;
+	pinctrl-0 = <&i2c1_p10>;
 	pinctrl-names = "default";
 	status = "okay";
 	clock-frequency = <I2C_BITRATE_FAST>;
 };
 
-&timer0 {
-	st, prescaler = <10000>;
+&timer {
 	status = "okay";
 };
 
-pwm0 {
-    status = "okay";
+&pwm {
+	pinctrl-0 = <&pwm>;
+	status = "okay";
 };
 
 &usbd {

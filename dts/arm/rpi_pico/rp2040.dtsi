@@ -9,11 +9,11 @@
 #include <mem.h>
 
 / {
-    /*
-     * Dual CPUs implementing the ARMv6-M architecture profile. See the
-     * ARMv6-M Architecture Reference Manual. A multistage 32bit RISC with
-     * single cycle I/O, hardware debug, and memory protection.
-     */
+	/*
+	 * Dual CPUs implementing the ARMv6-M architecture profile. See the
+	 * ARMv6-M Architecture Reference Manual. A multistage 32bit RISC with
+	 * single cycle I/O, hardware debug, and memory protection.
+	 */
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -43,8 +43,8 @@
 	 * and also two 4K (1Kx32) other banks that can be repurposed. Up to four
 	 * 32bit SRAM accesses can takep place per sclk cycle.
 	 * The two 4K regions are at 0x20040000 and 0x20041000.
-     * There are also non-striped versions of the 64K blocks at 16MB offsets
-     * from the base (0x21000000, 0x21010000, 0x21020000, 0x21030000).
+	 * There are also non-striped versions of the 64K blocks at 16MB offsets
+	 * from the base (0x21000000, 0x21010000, 0x21020000, 0x21030000).
 	 */
 	sram0: memory@20000000 {
 		compatible = "mmio-sram";
@@ -57,17 +57,17 @@
 	 * Bus error if XIP is not disabled in the XIP: CTRL Register.
 	 */
 	xipmem: memory@15000000 {
-        compatible = "mmio-sram";
-        reg = <0x15000000 DT_SIZE_K(16)>;
-    };
+		compatible = "mmio-sram";
+		reg = <0x15000000 DT_SIZE_K(16)>;
+	};
 
-    /*
-     * USB data DPRAM is available if USB is not in use.
-     */
+	/*
+	 * USB data DPRAM is available if USB is not in use.
+	 */
 	usbmem: memory@50100000 {
-        compatible = "mmio-sram";
-        reg = <0x15000000 DT_SIZE_K(4)>;
-    };
+		compatible = "mmio-sram";
+		reg = <0x15000000 DT_SIZE_K(4)>;
+	};
 
 	/*
 	 * XIP Flash starts at 0x10000000 but the first 0x100 bytes are
@@ -83,9 +83,24 @@
 		write-block-size = <1>;
 	};
 
+	/*
+	 * Main clock runs at max 133MHz, but can run slower than this if
+	 * required for power saving, etc
+	 */
+	sys_clk: sys-clk {
+		compatible = "fixed-clock";
+		clock-frequency = <133000000>;
+		#clock-cells = <0>;
+	};
+
+	/*
+	 * Peripheral clock by default is linked to sys clock, but can be
+	 * separated should the CPU clock need to be varied. Other clocks
+	 * such as USB (48MHz) are dervived from this.
+	 */
 	peripheral_clk: peripheral-clk {
 		compatible = "fixed-clock";
-		clock-frequency = <125000000>;
+		clock-frequency = <133000000>;
 		#clock-cells = <0>;
 	};
 
@@ -96,21 +111,21 @@
 		 */
 		m0plus: m0plus@e0000000 {
 			compatible = "rpi,pico-m0plus";
-			reg = <0xe0000000 DT_SIZE(0x48)>;
+			reg = <0xe0000000 0x48>;
 			label = "SYSINFO";
 			status = "okay";
 		};
 
 		sysinfo: sysinfo@40000000 {
 			compatible = "rpi,pico-sysinfo";
-			reg = <0x40000000 DT_SIZE(0x48)>;
+			reg = <0x40000000 0x48>;
 			label = "SYSINFO";
 			status = "okay";
 		};
 
 		syscfg: syscfg@40004000 {
 			compatible = "rpi,pico-syscfg";
-			reg = <0x40004000 DT_SIZE(0x1f)>;
+			reg = <0x40004000 0x1f>;
 			label = "SYSCFG";
 			status = "okay";
 		};
@@ -146,10 +161,10 @@
 		 * GPIO controller, pad master enable, drive strength etc.
 		 */
 		pads0: pads@4001c000 {
-            compatible = "rpi,pico-gpio";
-            reg = <0x4001c000 DT_SIZE_K(4)>;
-            label = "GPIO_0";
-            status = "disabled";
+			compatible = "rpi,pico-gpio";
+			reg = <0x4001c000 DT_SIZE_K(4)>;
+			label = "GPIO_0";
+			status = "disabled";
 		};
 
 		/**
@@ -159,7 +174,7 @@
 			compatible = "rpi,pico-uart";
 			reg = <0x40034000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <UART0_IRQ 3>;
+			interrupts = <20 3>;
 			interrupt-names = "uart0";
 			label = "UART_0";
 			status = "disabled";
@@ -172,7 +187,7 @@
 			compatible = "rpi,pico-uart";
 			reg = <0x40038000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <UART1_IRQ 3>;
+			interrupts = <21 3>;
 			interrupt-names = "uart1";
 			label = "UART_1";
 			status = "disabled";
@@ -187,7 +202,7 @@
 			#size-cells = <0>;
 			reg = <0x4003c000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <SPI0_IRQ 3>;
+			interrupts = <18 3>;
 			interrupt-names = "spi0";
 			label = "SPI_0";
 			status = "disabled";
@@ -202,7 +217,7 @@
 			#size-cells = <0>;
 			reg = <0x40040000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <SPI1_IRQ 3>;
+			interrupts = <19 3>;
 			interrupt-names = "spi1";
 			label = "SPI_1";
 			status = "disabled";
@@ -246,7 +261,7 @@
 			interrupt-names = "adc";
 			label = "ADC";
 			status = "disabled";
-            #io-channel-cells = <1>;
+			#io-channel-cells = <1>;
 		};
 
 		/**
@@ -268,8 +283,8 @@
 			compatible = "rpi,pico-timer";
 			reg = <0x40054000 DT_SIZE_K(4)>;
 			clocks = <&peripheral_clk>;
-			interrupts = <0 3> <1 3>, <2 3>, <3 3>;
-			interrupt-names = "timer0", "timer1", "timer2";
+			interrupts = <0 3>, <1 3>, <2 3>, <3 3>;
+			interrupt-names = "timer0", "timer1", "timer2", "timer3";
 			label = "TIMER";
 			status = "disabled";
 		};
@@ -305,10 +320,10 @@
 		dma: dma@50000000 {
 			compatible = "rpi,pico-dma";
 			reg = <0x50000000 DT_SIZE_K(4)>;
-			interrupts = <11 3> <12 3>;
-			interrupt-names = "dma0" "dma1";
+			interrupts = <11 3>, <12 3>;
+			interrupt-names = "dma0", "dma1";
 			label = "DMA";
-            #dma-cells = <1>;
+			#dma-cells = <1>;
 			status = "okay";
 		};
 
@@ -329,36 +344,36 @@
 		 * Programmed I/O block 0, incl 4 state machines.
 		 */
 		pio0: pio@50200000 {
-				compatible = "rpi,pico-pio";
-				reg = <0x50200000 DT_SIZE_K(4)>;
-				interrupts = <7 3>, <8 3>;
-				interrupt-names = "pio0_0", "pio0_1";
-				label = "PIO0";
-				status = "disabled";
+			compatible = "rpi,pico-pio";
+			reg = <0x50200000 DT_SIZE_K(4)>;
+			interrupts = <7 3>, <8 3>;
+			interrupt-names = "pio0_0", "pio0_1";
+			label = "PIO0";
+			status = "disabled";
 		};
 
 		/**
 		 * Programmed I/O block 1, incl 4 state machines.
 		 */
 		pio1: pio@50300000 {
-				compatible = "rpi,pico-pio";
-				reg = <0x50300000 DT_SIZE_K(4)>;
-				interrupts = <9 3>, <10 3>;
-				interrupt-names = "pio1_0", "pio1_1";
-				label = "PIO1";
-				status = "disabled";
+			compatible = "rpi,pico-pio";
+			reg = <0x50300000 DT_SIZE_K(4)>;
+			interrupts = <9 3>, <10 3>;
+			interrupt-names = "pio1_0", "pio1_1";
+			label = "PIO1";
+			status = "disabled";
 		};
 
 		/**
 		 * Single cycle memory access region.
 		 */
 		sio: sio@d0000000 {
-				compatible = "rpi,pico-sio";
-				reg = <0xd0000000 DT_SIZE_K(4)>;
-				interrupts = <7 3>, <8 3>;
-				interrupt-names = "sio0", "sio1";
-				label = "SIO";
-				status = "disabled";
+			compatible = "rpi,pico-sio";
+			reg = <0xd0000000 DT_SIZE_K(4)>;
+			interrupts = <7 3>, <8 3>;
+			interrupt-names = "sio0", "sio1";
+			label = "SIO";
+			status = "disabled";
 		};
 
 	};
